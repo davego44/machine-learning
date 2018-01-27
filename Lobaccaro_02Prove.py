@@ -51,6 +51,7 @@ def calc_print_results(targets_predicted, targets_test):
 			passed += 1
 	percent_correct = passed / len(targets_predicted) * 100.0
 	print("Percent correct: " + str(percent_correct))
+	return percent_correct
 
 def get_test_size():
 	return float(input("Enter float for test size: "))
@@ -60,22 +61,31 @@ def get_k(phrase):
 
 def main():
 	dataset = datasets.load_iris()
-	test_size = get_test_size()
-
+	#test_size = get_test_size()
+	k=30
 	# kNN My Own Implementation
-	own_k = get_k("Enter int for k for own implementation: ")
-	data_train, data_test, targets_train, targets_test = prepare_data(dataset.data, dataset.target, test_size)
-	classifier = kNNClassifier(own_k)
-	model = classifier.fit(data_train, targets_train)
-	targets_predicted = model.predict(data_test)
-	calc_print_results(targets_predicted, targets_test)
+	own_k = k#get_k("Enter int for k for own implementation: ")
 
+	my_own_total = 0
+	for i in range(0, 15):
+		data_train, data_test, targets_train, targets_test = prepare_data(dataset.data, dataset.target, 0.3)
+		classifier = kNNClassifier(own_k)
+		model = classifier.fit(data_train, targets_train)
+		targets_predicted = model.predict(data_test)
+		my_own_total += calc_print_results(targets_predicted, targets_test)
+	print(my_own_total / 15)
+
+	print("----")
+	lib_total = 0
 	# kNN Library Implementation
-	lib_k = get_k("Enter int for k for library implementation: ")
-	classifier2 = KNeighborsClassifier(n_neighbors=lib_k)
-	model2 = classifier2.fit(data_train, targets_train)
-	predictions = model2.predict(data_test)
-	calc_print_results(predictions, targets_test)
+	lib_k = k#get_k("Enter int for k for library implementation: ")
+	for i in range(0, 15):
+		data_train, data_test, targets_train, targets_test = prepare_data(dataset.data, dataset.target, 0.3)
+		classifier2 = KNeighborsClassifier(n_neighbors=lib_k)
+		model2 = classifier2.fit(data_train, targets_train)
+		predictions = model2.predict(data_test)
+		lib_total += calc_print_results(predictions, targets_test)
+	print(lib_total / 15)
 
 if __name__ == "__main__":
 	main()
