@@ -123,7 +123,7 @@ def get_pre_data(data_values, pre_option):
 	elif pre_option == 1:
 		return pre.StandardScaler().fit_transform(np.array(data_values))
 	else:
-		return np.array(data_values)
+		return np.array(data_values)s
 
 def cross_validation(n_splits, X, y, k, reg=False):
 	# Only give the option to use library kNN if not doing regression
