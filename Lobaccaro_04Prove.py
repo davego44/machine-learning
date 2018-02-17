@@ -206,6 +206,7 @@ def main():
 				correct += 1
 		average_correct = correct / len(df_test["class"]) * 100
 		print("Accuracy: " + str(average_correct))
+		model.display()
 
 if __name__ == "__main__":
 	main()
