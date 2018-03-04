@@ -8,6 +8,8 @@ from math import exp
 from sklearn import preprocessing as pre
 from sklearn.model_selection import train_test_split
 
+from sklearn.neural_network import MLPClassifier
+
 class Node:
 	def __init__(self):
 		self.activation = 0
@@ -225,7 +227,7 @@ def accuracy_iris(predicted, targets_test):
 			value = "Iris-setosa"
 		if value == tar:
 			count += 1
-	print("Iris Accuracy: " + str(count / len(predicted) * 100))
+	print(str(count / len(predicted) * 100))
 
 def accuracy_prima(predicted, targets_test):
 	count = 0
@@ -237,7 +239,7 @@ def accuracy_prima(predicted, targets_test):
 			value = 0
 		if value == tar:
 			count += 1
-	print("Prima Accuracy: " + str(count / len(predicted) * 100))
+	print(str(count / len(predicted) * 100))
 
 def main():
 	dataI, targetsI = prepare_iris_data()
@@ -251,14 +253,14 @@ def main():
 	momentumConstant = 0.9
 	model = classifer.fit(data_train, targets_train, targets_map, learnRate, momentumConstant)
 	predicted = model.predict(data_test)
-	accuracy_iris(predicted, targets_test)
-	for _ in range(80):
+	#accuracy_iris(predicted, targets_test)
+	for _ in range(100):
 		shuffler = np.arange(data_train.shape[0])
 		data_train = data_train[shuffler]
 		targets_train = targets_train[shuffler]
 		model.train(data_train, targets_train, targets_map, learnRate, momentumConstant)
 		predicted = model.predict(data_test)
-		accuracy_iris(predicted, targets_test)
+		#accuracy_iris(predicted, targets_test)
 
 	print("------------")
 	print("Prima")
@@ -270,14 +272,36 @@ def main():
 	learnRate = 0.3
 	model = classifer.fit(data_train, targets_train, targets_map, learnRate, momentumConstant)
 	predicted = model.predict(data_test)
-	accuracy_prima(predicted, targets_test)
-	for _ in range(50):
+	#accuracy_prima(predicted, targets_test)
+	for _ in range(100):
 		shuffler = np.arange(data_train.shape[0])
 		data_train = data_train[shuffler]
 		targets_train = targets_train[shuffler]
 		model.train(data_train, targets_train, targets_map, learnRate, momentumConstant)
 		predicted = model.predict(data_test)
-		accuracy_prima(predicted, targets_test)
+		#accuracy_prima(predicted, targets_test)
+
+	data_train, data_test, targets_train, targets_test = train_test_split(dataI, targetsI, test_size=0.3)
+	clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(3, 3), random_state=1, momentum=0.9)
+	clf.fit(data_train, targets_train)
+	predicted = clf.predict(data_test)
+	print(predicted)
+	count = 0
+	for pred, tar in zip(predicted, targets_test):
+		if (pred == tar):
+			count += 1
+	print(str(count / len(predicted) * 100))
+
+	data_train, data_test, targets_train, targets_test = train_test_split(dataP, targetsP, test_size=0.3)
+	clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(3, 3), random_state=1, momentum=0.9)
+	clf.fit(data_train, targets_train)
+	predicted = clf.predict(data_test)
+	print(predicted)
+	count = 0
+	for pred, tar in zip(predicted, targets_test):
+		if (pred == tar):
+			count += 1
+	print(str(count / len(predicted) * 100))
 
 if __name__ == "__main__":
 	main()
